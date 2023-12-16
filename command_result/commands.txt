@@ -1,0 +1,11 @@
+# 実行コマンド一覧
+#
+df -h
+ls -alFd $(find /home/yhigu/dev/bash)
+crontab -l
+cat /etc/hosts
+cat /proc/meminfo
+free -h
+
+
+
