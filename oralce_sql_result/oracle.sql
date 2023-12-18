@@ -4,6 +4,12 @@ set trimspool on
 set pagesize 500
 set linesize 200
 prompt ******************************************************************************************
+prompt --- List Parameters
+COL NAME format a30
+COL VALUE format a30
+PROMPT SELECT NAME, VALUE FROM v$PARAMETER;
+SELECT NAME, VALUE FROM v$PARAMETER;
+prompt ******************************************************************************************
 prompt --- List DBA Users
 col USERNAME format a10
 col ACCOUNT_STATUS format a20
@@ -17,24 +23,53 @@ COL CREATED FORMAT a10
 prompt SELECT * FROM ALL_USERS ORDER BY USERNAME;
 SELECT USERNAME, CREATED FROM ALL_USERS ORDER BY CREATED;
 prompt ******************************************************************************************
-prompt --- DBA User Privileges
-COL GRANTEE FORMAT A30
-COL PRIVILEGE FORMAT a40
-COL ADMIN_OPTION FORMAT a30
-PROMPT SELECT GRANTEE, PRIVILEGE, ADMIN_OPTION FROM DBA_SYS_PRIVS;
-SELECT GRANTEE, PRIVILEGE, ADMIN_OPTION FROM DBA_SYS_PRIVS ORDER by GRANTEE;
+prompt --- User's Role
+COL GRANTEE FORMAT a20
+COL GRANTED_ROLE FORMAT a30
+prompt SELECT GRANTEE, GRANTED_ROLE FROM DBA_ROLE_PRIVS WHERE GRANTEE='NISHI';
+SELECT GRANTEE, GRANTED_ROLE FROM DBA_ROLE_PRIVS WHERE GRANTEE='NISHI';
+prompt ******************************************************************************************
+prompt --- User's Default Tablespace
+COL USERNAME FORMAT a10
+COL DEFAULT_TABLESPACE FORMAT a20
+PROMPT SELECT username, default_tablespace
+PROMPT FROM dba_users
+PROMPT WHERE username = 'NISHI';
+SELECT username, default_tablespace
+FROM dba_users
+WHERE username = 'NISHI';
+prompt ******************************************************************************************
+PROMPT --- User's Schema Quota
+col USERNAME format a30
+col TABLESPACE_NAME format a30
+select USERNAME
+     , TABLESPACE_NAME
+     , BYTES / 1024 / 1024 as MBytes
+     , decode(MAX_BYTES
+         , -1 , -1
+         , MAX_BYTES / 1024 / 1024) as Max_MBytes
+     , ROUND((BYTES/MAX_BYTES)*100, 1) as "TS_Usage(%)"
+  from DBA_TS_QUOTAS
+ order by USERNAME, TABLESPACE_NAME;
+prompt ******************************************************************************************
+PROMPT --- User's Table
+col OWNER format a10
+col TABLE_NAME format a30
+PROMPT SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE OWNER = 'NISHI' ORDER BY TABLE_NAME;
+SELECT OWNER, TABLE_NAME FROM ALL_TABLES WHERE OWNER = 'NISHI' ORDER BY TABLE_NAME;
+-- prompt ******************************************************************************************
+-- prompt --- DBA User Privileges
+-- COL GRANTEE FORMAT A30
+-- COL PRIVILEGE FORMAT a40
+-- COL ADMIN_OPTION FORMAT a30
+-- PROMPT SELECT GRANTEE, PRIVILEGE, ADMIN_OPTION FROM DBA_SYS_PRIVS;
+-- SELECT GRANTEE, PRIVILEGE, ADMIN_OPTION FROM DBA_SYS_PRIVS ORDER by GRANTEE;
 prompt ******************************************************************************************
 prompt --- Default passwod life time
 COL PROFILE FORMAT a10
 COL RESOURCE_NAME FORMAT a20
 COL RESOURCE_TYPE  FORMAT a10
 COL LIMIT FORMAT a10
-prompt SELECT
-prompt    PROFILE,RESOURCE_NAME,RESOURCE_TYPE,LIMIT 
-prompt FROM
-prompt   DBA_PROFILES 
-prompt WHERE
-prompt    RESOURCE_NAME = 'PASSWORD_LIFE_TIME';
 SELECT
     PROFILE,RESOURCE_NAME,RESOURCE_TYPE,LIMIT 
 FROM
@@ -64,53 +99,6 @@ col window_group for a15
 prompt select client_name,status,window_group from dba_autotask_client;
 select client_name,status,window_group from dba_autotask_client;
 prompt ******************************************************************************************
-prompt --- Fast recovery area
-col NAME for a30
-col TYPE for a30
-col VALUE for a30
-prompt show parameters db_recovery;
-show parameters db_recovery;
-prompt SHOW PARAMETER DB_RECOVERY_FILE_DEST;
-SHOW PARAMETER DB_RECOVERY_FILE_DEST;
-prompt ******************************************************************************************
-prompt --- Details for log_archive_dest_1 and log_archive_dest_2
-col NAME for a30
-col VALUE for a30
-PROMPT SELECT name,value FROM v$parameter WHERE name = 'log_archive_dest_1' or name = 'log_archive_dest_2';
-SELECT name,value FROM v$parameter WHERE name = 'log_archive_dest_1' or name = 'log_archive_dest_2';
-prompt ******************************************************************************************
-prompt --- log_archive_format
-col NAME for a20
-col TYPE for a10
-col VALUE for a28
-PROMPT SHOW PARAMETERS log_archive_format;
-SHOW PARAMETERS log_archive_format;
-prompt ******************************************************************************************
-PROMPT --- Memory allocation
-col NAME for a15
-col TYPE for a15
-col VALUE for a15
-PROMPT SHOW PARAMETERS target
-SHOW PARAMETERS target;
-prompt ******************************************************************************************
-PROMPT --- Character set
-COL PARAMETER FORMAT a30
-COL VALUE FORMAT a20
-PROMPT SELECT PARAMETER, VALUE
-PROMPT FROM NLS_DATABASE_PARAMETERS
-PROMPT WHERE PARAMETER IN ('NLS_CHARACTERSET', 'NLS_NCHAR_CHARACTERSET', 'NLS_TERRITORY')
-SELECT PARAMETER, VALUE
-FROM NLS_DATABASE_PARAMETERS
-WHERE PARAMETER IN ('NLS_CHARACTERSET', 'NLS_NCHAR_CHARACTERSET', 'NLS_TERRITORY');
-prompt ******************************************************************************************
-PROMPT --- The number of processes and sessions
-PROMPT SELECT NAME, VALUE
-PROMPT FROM V$SYSTEM_PARAMETER
-PROMPT WHERE NAME IN ('processes', 'sessions')
-SELECT NAME, VALUE
-FROM V$SYSTEM_PARAMETER
-WHERE NAME IN ('processes', 'sessions');
-prompt ******************************************************************************************
 PROMPT --- Server Type
 PROMPT select server from v$session where sid = userenv('SID');
 select server from v$session where sid = userenv('SID');
@@ -133,25 +121,6 @@ PROMPT --- Tablespace Data Files
 col FILE_NAME for A40
 col TABLESPACE_NAME for A10
 col ONLINE_STATUS for A14
---
-PROMPT SELECT TABLESPACE_NAME
-PROMPT ,FILE_NAME
-PROMPT ,BYTES/1024/1024 M_BYTE
-PROMPT ,ONLINE_STATUS
-PROMPT ,AUTOEXTENSIBLE
-PROMPT ,round(MAXBYTES/1024/1024) M_MAXBYTES
-PROMPT ,INCREMENT_BY
-PROMPT FROM DBA_DATA_FILES 
-PROMPT union all
-PROMPT select TABLESPACE_NAME
-PROMPT ,FILE_NAME
-PROMPT ,BYTES/1024/1024 M_BYTE
-PROMPT ,STATUS
-PROMPT ,AUTOEXTENSIBLE
-PROMPT ,round(MAXBYTES/1024/1024) M_MAXBYTES
-PROMPT ,INCREMENT_BY
-PROMPT from DBA_TEMP_FILES
-PROMPT ORDER BY TABLESPACE_NAME,FILE_NAME
 --  
 SELECT TABLESPACE_NAME                -- 表領域名
 ,FILE_NAME                            -- データファイル名
@@ -171,6 +140,39 @@ select TABLESPACE_NAME
 ,INCREMENT_BY
 from DBA_TEMP_FILES
 ORDER BY TABLESPACE_NAME,FILE_NAME;
+prompt ******************************************************************************************
+PROMPT --- Tablespace Free Space
+COL 表領域 FORMAT  A12
+COL "ファイル容量(MB)" FORMAT 99999.9
+COL "使用容量(MB)" FORMAT 99999.9
+COL "空き容量(MB)" FORMAT 99999.9
+COL "使用率(%)"  FORMAT 999.9
+SELECT
+  A.TABLESPACE_NAME 表領域
+  , ROUND(SUM(BYTES) / 1024 / 1024, 1) "ファイル容量(MB)"
+  , ROUND(SUM(BYTES - SUM_BYTES) / 1024 / 1024, 1) "使用容量(MB)"
+  , ROUND(SUM(SUM_BYTES) / 1024 / 1024, 1) "空き容量(MB)"
+  , ROUND((SUM(BYTES - SUM_BYTES) / 1024) / (SUM(BYTES) / 1024) * 100, 1)
+    "使用率(%)" 
+FROM
+  DBA_DATA_FILES A 
+  LEFT JOIN 　( 
+    SELECT
+      TABLESPACE_NAME
+      , FILE_ID
+      , NVL(SUM(BYTES), 0) SUM_BYTES 　 
+    FROM
+      DBA_FREE_SPACE 
+    GROUP BY
+      TABLESPACE_NAME
+      , FILE_ID
+  ) B 
+    ON A.TABLESPACE_NAME = B.TABLESPACE_NAME 
+    AND A.FILE_ID = B.FILE_ID 
+GROUP BY
+  A.TABLESPACE_NAME 
+ORDER BY
+  1;
 prompt ******************************************************************************************
 spool off
 quit
