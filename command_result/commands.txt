@@ -1,11 +1,98 @@
-# 実行コマンド一覧
-#
-df -h
-ls -alFd $(find /home/yhigu/dev/bash)
-crontab -l
-cat /etc/hosts
-cat /proc/meminfo
-free -h
-
-
+echo "--------------------" > $(hostname -s)_$(date +'%Y%m%d').txt
+echo "df -h" >> $(hostname -s)_$(date +'%Y%m%d').txt
+df -h >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo 'ls -alFd "$(find /db)"' >> $(hostname -s)_$(date +'%Y%m%d').txt
+ls -alFd $(find /db)  >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "lsblk -ip" >> $(hostname -s)_$(date +'%Y%m%d').txt
+lsblk -ip >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "crontab -l" >> $(hostname -s)_$(date +'%Y%m%d').txt
+crontab -l >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "crontab -u oracle -l" >> $(hostname -s)_$(date +'%Y%m%d').txt
+crontab -u oracle -l >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "uname -a" >> $(hostname -s)_$(date +'%Y%m%d').txt
+uname -a >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/os-release" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/os-release >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/hosts" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/hosts >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/fstab" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/fstab >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "ip a" >> $(hostname -s)_$(date +'%Y%m%d').txt
+ip a >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "ip route show" >> $(hostname -s)_$(date +'%Y%m%d').txt
+ip route show >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "nmcli dev show |grep DNS" >> $(hostname -s)_$(date +'%Y%m%d').txt
+nmcli dev show |grep DNS >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "systemctl status chronyd" >> $(hostname -s)_$(date +'%Y%m%d').txt
+systemctl status chronyd >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/chrony.conf" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/chrony.conf >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "systemctl status snmpd" >> $(hostname -s)_$(date +'%Y%m%d').txt
+systemctl status snmpd >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/passwd" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/passwd >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/group" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/group >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "ls -al /bin/rb*" >> $(hostname -s)_$(date +'%Y%m%d').txt
+ls -al /bin/rb* >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "free -h" >> $(hostname -s)_$(date +'%Y%m%d').txt
+free -h >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /proc/meminfo" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /proc/meminfo >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/security/limits.conf |grep ^oracle" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/security/limits.conf |grep ^oracle >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/profile" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/profile >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/sysctl.d/97-oracle-database-sysctl.conf" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/sysctl.d/97-oracle-database-sysctl.conf >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /sys/kernel/mm/transparent_hugepage/enabled" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /sys/kernel/mm/transparent_hugepage/enabled >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "find /opt/app/oracle -name init*.ora" >> $(hostname -s)_$(date +'%Y%m%d').txt
+find /opt/app/oracle -name init*.ora >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "find /opt/app/oracle -name tnsnames.ora" >> $(hostname -s)_$(date +'%Y%m%d').txt
+find /opt/app/oracle -name tnsnames.ora >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "find /opt/app/oracle -name listener.ora" >> $(hostname -s)_$(date +'%Y%m%d').txt
+find /opt/app/oracle -name listener.ora >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /etc/oratab" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /etc/oratab >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "ls -al /home" >> $(hostname -s)_$(date +'%Y%m%d').txt
+ls -al /home >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "ls -al /opt/app" >> $(hostname -s)_$(date +'%Y%m%d').txt
+ls -al /opt/app >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /proc/cpuinfo |grep processor" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /proc/cpuinfo |grep processor >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /home/oracle/.bash_profile" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /home/oracle/.bash_profile >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
 
