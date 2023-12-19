@@ -1,0 +1,69 @@
+spool tablespace_info.txt
+set feedback off
+set trimspool on
+set pagesize 100
+set linesize 200
+--- Tablespace Space Usage
+COL TABLESPACE_NAME FORMAT  A18
+COL "Size(MB)" FORMAT 99999
+COL "Used(MB)" FORMAT 99999
+COL "Free(MB)" FORMAT 99999
+COL "Usage(%)"  FORMAT 999
+SELECT
+  A.TABLESPACE_NAME TABLESPACE_NAME
+  , ROUND(SUM(BYTES) / 1024 / 1024, 1) "Size(MB)"
+  , ROUND(SUM(BYTES - SUM_BYTES) / 1024 / 1024, 1) "Used(MB)"
+  , ROUND(SUM(SUM_BYTES) / 1024 / 1024, 1) "Free(MB)"
+  , ROUND((SUM(BYTES - SUM_BYTES) / 1024) / (SUM(BYTES) / 1024) * 100, 1) "Usage(%)" 
+FROM
+  DBA_DATA_FILES A 
+  LEFT JOIN ( 
+    SELECT
+      TABLESPACE_NAME
+      , FILE_ID
+      , NVL(SUM(BYTES), 0) SUM_BYTES 
+    FROM
+      DBA_FREE_SPACE 
+    GROUP BY
+      TABLESPACE_NAME
+      , FILE_ID
+  ) B 
+    ON A.TABLESPACE_NAME = B.TABLESPACE_NAME 
+    AND A.FILE_ID = B.FILE_ID 
+GROUP BY
+  A.TABLESPACE_NAME 
+ORDER BY
+  1;
+--- Tablespace Space File Usage
+COL TABLESPACE_NAME FORMAT  A18
+COL DataFile FORMAT  A40
+COL "File Size(MB)" FORMAT 99999
+COL "Used(MB)" FORMAT 99999
+COL "Free(MB)" FORMAT 99999
+COL "Usage(%)"  FORMAT 999
+SELECT
+  A.TABLESPACE_NAME TABLESPACE_NAME
+  , FILE_NAME DataFile
+  , ROUND(BYTES / 1024 / 1024, 1) "File Size(MB)"
+  , ROUND((BYTES - NVL(SUM_BYTES, 0)) / 1024 / 1024, 1) "Used(MB)"
+  , ROUND(NVL(SUM_BYTES, 0) / 1024 / 1024, 1) "Free(MB)"
+  , ROUND(((BYTES - NVL(SUM_BYTES, 0)) / 1024) / (BYTES / 1024) * 100, 1) "Usage(%)" 
+FROM
+  DBA_DATA_FILES A 
+  LEFT JOIN ( 
+    SELECT
+      TABLESPACE_NAME
+      , FILE_ID
+      , SUM(BYTES) SUM_BYTES 
+    FROM
+      DBA_FREE_SPACE 
+    GROUP BY
+      TABLESPACE_NAME
+      , FILE_ID
+  ) B 
+    ON A.TABLESPACE_NAME = B.TABLESPACE_NAME 
+    AND A.FILE_ID = B.FILE_ID 
+ORDER BY
+  1, 2;
+spool off
+quit
