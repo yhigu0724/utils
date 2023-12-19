@@ -141,19 +141,18 @@ select TABLESPACE_NAME
 from DBA_TEMP_FILES
 ORDER BY TABLESPACE_NAME,FILE_NAME;
 prompt ******************************************************************************************
-PROMPT --- Tablespace Free Space
-COL 表領域 FORMAT  A12
-COL "ファイル容量(MB)" FORMAT 99999.9
-COL "使用容量(MB)" FORMAT 99999.9
-COL "空き容量(MB)" FORMAT 99999.9
-COL "使用率(%)"  FORMAT 999.9
+PROMPT --- Tablespace Space Usage
+COL TABLESPACE_NAME FORMAT  A18
+COL "Size(MB)" FORMAT 99999
+COL "Used(MB)" FORMAT 99999
+COL "Free(MB)" FORMAT 99999
+COL "Usage(%)"  FORMAT 999
 SELECT
-  A.TABLESPACE_NAME 表領域
-  , ROUND(SUM(BYTES) / 1024 / 1024, 1) "ファイル容量(MB)"
-  , ROUND(SUM(BYTES - SUM_BYTES) / 1024 / 1024, 1) "使用容量(MB)"
-  , ROUND(SUM(SUM_BYTES) / 1024 / 1024, 1) "空き容量(MB)"
-  , ROUND((SUM(BYTES - SUM_BYTES) / 1024) / (SUM(BYTES) / 1024) * 100, 1)
-    "使用率(%)" 
+  A.TABLESPACE_NAME TABLESPACE_NAME
+  , ROUND(SUM(BYTES) / 1024 / 1024, 1) "Size(MB)"
+  , ROUND(SUM(BYTES - SUM_BYTES) / 1024 / 1024, 1) "Used(MB)"
+  , ROUND(SUM(SUM_BYTES) / 1024 / 1024, 1) "Free(MB)"
+  , ROUND((SUM(BYTES - SUM_BYTES) / 1024) / (SUM(BYTES) / 1024) * 100, 1) "Usage(%)" 
 FROM
   DBA_DATA_FILES A 
   LEFT JOIN 　( 
