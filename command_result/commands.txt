@@ -1,4 +1,29 @@
 echo "--------------------" > $(hostname -s)_$(date +'%Y%m%d').txt
+echo "systemctl list-unit-files | sort -f" >> $(hostname -s)_$(date +'%Y%m%d').txt
+systemctl list-unit-files | sort -f >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "systemctl list-unit-files --state=enabled,disabled |grep -Pv '^(UNIT|\d|^$)' |sort -f" >> $(hostname -s)_$(date +'%Y%m%d').txt
+systemctl list-unit-files --state=enabled,disabled |grep -Pv '^(UNIT|\d|^$)' |sort -f >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /opt/app/oracle/product/19.3.0/dbhome_1/network/admin/tnsnames.ora" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /opt/app/oracle/product/19.3.0/dbhome_1/network/admin/tnsnames.ora >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "cat /opt/app/oracle/product/19.3.0/dbhome_1/network/admin/listener.ora" >> $(hostname -s)_$(date +'%Y%m%d').txt
+cat /opt/app/oracle/product/19.3.0/dbhome_1/network/admin/listener.ora >> $(hostname -s)_$(date +'%Y%m%d').txt
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+systemctl list-unit-files --state=enabled,disabled |grep -Pv '^(UNIT|\d|^$)' |sort -f |awk '{print $1,$2}' | while read -r unit state
+do
+    output=$(systemctl show "$unit" 2>&1)
+    if [[ "$output" == *"Failed"* ]]; then
+      echo "Error: "$unit" $output" >> $(hostname -s)_$(date +'%Y%m%d').txt
+    else
+      vendor_preset=$(echo "$output" | grep Preset | cut -d'=' -f2)
+      echo "$unit,$state,$vendor_preset" >> $(hostname -s)_$(date +'%Y%m%d').txt
+    fi
+done
+echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
+
+
 echo "df -h" >> $(hostname -s)_$(date +'%Y%m%d').txt
 df -h >> $(hostname -s)_$(date +'%Y%m%d').txt
 echo "--------------------" >> $(hostname -s)_$(date +'%Y%m%d').txt
