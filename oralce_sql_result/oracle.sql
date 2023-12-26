@@ -4,6 +4,18 @@ set trimspool on
 set pagesize 500
 set linesize 200
 prompt ******************************************************************************************
+COL GRANTEE format a30
+COL GRANTED_ROLE  format a30
+SELECT GRANTEE, GRANTED_ROLE 
+FROM dba_role_privs 
+WHERE grantee = 'NISHI';
+COL GRANTEE GRANTEE a30
+COL TABLE_NAME  format a30
+COL PRIVILEGE  format a30
+SELECT GRANTEE, OWNER, TABLE_NAME, PRIVILEGE
+FROM dba_tab_privs 
+WHERE GRANTEE='NISHI';
+prompt ******************************************************************************************
 prompt --- List Parameters
 COL NAME format a30
 COL VALUE format a30
