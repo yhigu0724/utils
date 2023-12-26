@@ -4,6 +4,19 @@ set trimspool on
 set pagesize 500
 set linesize 200
 prompt ******************************************************************************************
+COL username format a30
+COL default_tablespace format a30
+SELECT username, default_tablespace 
+FROM dba_users 
+WHERE username = 'NISHI';
+prompt ******************************************************************************************
+COL username format a30
+COL tablespace_name  format a30
+COL MAX_BYTES  format 9999999999
+SELECT username, tablespace_name, MAX_BYTES
+FROM dba_ts_quotas 
+WHERE username = 'NISHI' order by username;
+prompt ******************************************************************************************
 COL GRANTEE format a30
 COL GRANTED_ROLE  format a30
 SELECT GRANTEE, GRANTED_ROLE 
