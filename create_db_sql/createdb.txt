@@ -18,3 +18,86 @@ SYSAUX DATAFILE '/oradata/TS/SYS/sysaux01.dbf' SIZE 1G AUTOEXTEND ON NEXT 10M MA
 DEFAULT TEMPORARY TABLESPACE TEMP TEMPFILE '/oradata/TS/TEMP/temp01.dbf' SIZE 1G AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED
 UNDO TABLESPACE UNDOTBS1 DATAFILE  '/oradata/TS/DATA/undotbs01.dbf' SIZE 1G AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED
 ;
+
+--- ユーザの確認 
+SQL> show user
+ユーザーは"SYS"です。
+-- データ・ディクショナリ・スクリプトの実行
+SQL> @?/rdbms/admin/catalog.sql;
+SQL> @?/rdbms/admin/catproc.sql;
+SQL> @?/rdbms/admin/catoctk.sql;
+-- Oracle Workspace Manager（OWM）
+SQL> @?/rdbms/admin/owminst.plb;
+
+-- PRODUCT_USER_PROFILE表の作成
+SQL> connect system
+パスワードを入力してください: 
+接続されました。
+SQL> show user
+ユーザーは"SYSTEM"です
+SQL> @?/sqlplus/admin/pupbld.sql;
+
+SQL> connect sys as sysdba
+パスワードを入力してください: 
+Connected.
+SQL> show user
+USER is "SYS"
+SQL> @?/sqlplus/admin/pupdel.sql;
+
+-- コマンドライン・ヘルプのインストール
+SQL> connect system
+Enter password:
+Connected.
+SQL> show user
+USER is "SYSTEM"
+SQL> @?/sqlplus/admin/help/hlpbld.sql helpus.sql;
+
+-- oracle JVMのインストール
+SQL> connect sys as sysdba
+SQL> show user
+USER is "SYS"
+
+SQL> @?/javavm/install/initjvm.sql;
+SQL> @?/xdk/admin/initxml.sql;
+SQL> @?/xdk/admin/xmlja.sql;
+SQL> @?/rdbms/admin/catjava.sql;
+SQL> @?/rdbms/admin/catxdbj.sql;
+
+-- oracle textのインストール
+SQL> @?/ctx/admin/catctx.sql Xbkfsdcdf1ggh_123 SYSAUX TEMP LOCK;
+SQL> alter user CTXSYS account unlock identified by "CTXSYS";
+
+SQL> connect "CTXSYS"/"CTXSYS";
+接続されました
+SQL> show user
+USER is "CTXSYS"
+SQL> @?/ctx/admin/defaults/dr0defin.sql "AMERICAN";
+
+SQL> connect sys as sysdba
+SQL> show user
+USER is "SYS"
+SQL> alter user CTXSYS password expire account lock;
+ユーザーが変更されました。
+
+SQL> @?/rdbms/admin/dbmsxdbt.sql;
+
+-- Oralce Multimediaのインストール
+SQL> @?/ord/admin/ordinst.sql SYSAUX SYSAUX;
+SQL> @?/ord/im/admin/iminst.sql;
+
+-- Oracle OLAPのインストール
+SQL> @?/olap/admin/olap.sql SYSAUX TEMP;
+
+-- Oralce Spaticalのインストール
+SQL> @?/md/admin/mdinst.sql;
+
+-- Oracle Label Securityのインストール
+SQL> @?/rdbms/admin/catols.sql;
+
+-- Oracle Application Expressのインストール
+SQL> @?/apex/catapx.sql Xbkfsdcdf1ggh_123 SYSAUX SYSAUX TEMP /i/ NONE;
+
+-- Oracle Database Vaultのインストール
+SQL> @?/rdbms/admin/catmac.sql SYSAUX TEMP;
+
+-- SYS, SYSTEM 以外のユーザをロック
