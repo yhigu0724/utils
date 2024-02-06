@@ -1,0 +1,86 @@
+##############################################################################
+# Copyright (c) 1991, 2013 by Oracle Corporation
+##############################################################################
+
+###########################################
+# File Configuration
+###########################################
+control_files=("/oradata/REDOCTRL1/CTL/control01.ctl", "/oradata/REDOCTRL2/CTL/control02.ctl")
+DB_RECOVERY_FILE_DEST="/oradata/FAST"
+DB_RECOVERY_FILE_DEST_SIZE=25769803776
+ 
+###########################################
+# Archive
+###########################################
+log_archive_dest_1='LOCATION=USE_DB_RECOVERY_FILE_DEST'
+log_archive_dest_2='LOCATION=/oradata/ARCHIVE'
+log_archive_format=%t_%s_%r.dbf
+ 
+###########################################
+# Cache and I/O
+###########################################
+db_block_size=8192
+ 
+###########################################
+# Cursors and Library Cache
+###########################################
+open_cursors=300
+ 
+###########################################
+# Database Identification
+###########################################
+db_name="C"
+ 
+ 
+###########################################
+# Miscellaneous
+###########################################
+compatible=19.0.0
+ 
+###########################################
+# NLS
+###########################################
+nls_language="JAPANESE"
+nls_territory="JAPAN"
+#NLS_DATE_FORMAT="RRRR-MM-DD HH24:MI:SS"
+
+ 
+###########################################
+# Network Registration
+###########################################
+local_listener=LISTENER_ORCL
+ 
+###########################################
+# Processes and Sessions
+###########################################
+processes=320
+
+ 
+###########################################
+# SGA Memory
+###########################################
+memory_target=3435973836
+ 
+###########################################
+# Security and Auditing
+###########################################
+#audit_file_dest="/opt/app/oracle/admin/C/adump"
+#remote_login_passwordfile=EXCLUSIVE
+ 
+###########################################
+# Shared Server
+###########################################
+dispatchers="(PROTOCOL=TCP) (SERVICE=orclXDB)"
+
+ 
+###########################################
+# System Managed Undo and Rollback Segments
+###########################################
+undo_tablespace=UNDOTBS1
+#
+#UNIFIED_AUDIT_SGA_QUEUE_SIZE=31457280
+
+
+
+ 
+ 
