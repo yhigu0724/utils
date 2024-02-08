@@ -41,6 +41,26 @@ FROM dba_ts_quotas q
 JOIN dba_users u ON q.username = u.username
 WHERE u.username = 'NISHI';
 
+-- ディレクトリオブジェクトの確認
+SET LINESIZE 200
+SET PAGESIZE 500
+COL DIRECTORY_NAME FORMAT A24
+COL DIRECTORY_PATH FORMAT A66
+COL OWNER FORMAT A10
+SELECT DIRECTORY_NAME, DIRECTORY_PATH, OWNER 
+FROM dba_directories 
+WHERE DIRECTORY_NAME = 'DPUMP_DIR';
+
+-- ディレクトリオブジェクトに対する権限の確認
+SET LINESIZE 200
+SET PAGESIZE 500
+COL grantee FORMAT A14
+COL privilege FORMAT A14
+SELECT grantee, privilege 
+FROM dba_tab_privs 
+WHERE table_name = 'DPUMP_DIR';
+
+
 -- 表領域情報
 SET LINESIZE 200
 SET PAGESIZE 1000
