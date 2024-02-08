@@ -28,13 +28,25 @@ SQL> SELECT open_mode FROM v$database;
 OPEN_MODE
 ------------------
 READ WRITE
+-- ユーザーが使用可能な表領域、それに対するQUOTA、およびデフォルト表領域
+SET LINESIZE 200
+SET PAGESIZE 100
+COL USERNAME FORMAT A12
+COL TABLESPACE_NAME FORMAT 16
+COL default_tablespace FORMAT A14
+COL temporary_tablespace FORMAT A14
+SELECT u.username, q.tablespace_name, q.bytes, q.max_bytes, 
+u.default_tablespace, u.temporary_tablespace
+FROM dba_ts_quotas q
+JOIN dba_users u ON q.username = u.username
+WHERE u.username = 'NISHI';
 
 -- 表領域情報
 SET LINESIZE 200
 SET PAGESIZE 1000
 COL TABLESPACE_NAME FOR A12
 COL FILE_NAME FOR A36
-COL CONTENTS FOR A10
+COL CONTENTS FOR A10    
 COL BLOCK_SIZE FOR 9999
 COL EXTENT_MANAGEMENT FOR A18
 COL ALLOCATION_TYPE FOR A15
