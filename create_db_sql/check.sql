@@ -1,4 +1,54 @@
 
+-- ロール(ROLE)にユーザ(HIGASHI)が所有するテーブルの権限を付与
+BEGIN
+   FOR t IN (SELECT table_name FROM all_tables WHERE owner = 'HIGASHI') LOOP
+      EXECUTE IMMEDIATE 'GRANT SELECT, INSERT, UPDATE, DELETE ON HIGASHI.' || t.table_name || ' TO ROLE';
+   END LOOP;
+END;
+/
+-- ロール(ROLE)にユーザ(HIGASHI)が所有するテーブルの権限を付与 確認
+SET LINESIZE 100
+SET PAGESIZE 500
+COL GRANTEE FORMAT A12
+COL OWNER FORMAT A12
+COL TABLE_NAME FORMAT A16
+COL PRIVILEGE FORMAT A10
+SELECT GRANTEE, OWNER, TABLE_NAME, PRIVILEGE 
+FROM DBA_TAB_PRIVS WHERE GRANTEE = 'ROLE';
+
+-- ロール(ROLE)にユーザ(HIGASHI)が所有するシーケンスの権限を付与
+BEGIN
+   FOR s IN (SELECT sequence_name FROM all_sequences WHERE sequence_owner = 'HIGASHI') LOOP
+      EXECUTE IMMEDIATE 'GRANT SELECT ON HIGASHI.' || s.sequence_name || ' TO ROLE';
+   END LOOP;
+END;
+/
+-- ロールにユーザ(HIGASHI)が所有するシーケンスの権限を付与 確認
+SET LINESIZE 100
+SET PAGESIZE 500
+COL TABLE_NAME FORMAT A16
+COL PRIVILEGE FORMAT A10
+SELECT table_name, privilege 
+FROM USER_TAB_PRIVS 
+WHERE table_name IN (SELECT sequence_name FROM USER_SEQUENCES);
+
+-- ロールにユーザ(HIGASHI)が所有するテーブルとシーケンスの権限を付与を一度に確認
+COL TABLE_NAME FORMAT A16
+COL PRIVILEGE FORMAT A10
+COL OBJECT_TYPE FORMAT A16
+SELECT table_name, privilege, 'TABLE' as object_type
+FROM USER_TAB_PRIVS 
+WHERE table_name IN (SELECT table_name FROM USER_TABLES)
+UNION ALL
+SELECT table_name, privilege, 'SEQUENCE' as object_type
+FROM USER_TAB_PRIVS 
+WHERE table_name IN (SELECT sequence_name FROM USER_SEQUENCES)
+;
+
+
+
+
+
 -- ユーザのロールと権限を同時に表示
 SET LINESIZE 100
 SET PAGESIZE 500
