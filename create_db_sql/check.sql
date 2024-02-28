@@ -33,18 +33,19 @@ FROM USER_TAB_PRIVS
 WHERE table_name IN (SELECT sequence_name FROM USER_SEQUENCES);
 
 -- ロールにユーザ(HIGASHI)が所有するテーブルとシーケンスの権限を付与を一度に確認
+COL ROLE FORMAT A10
 COL TABLE_NAME FORMAT A16
 COL PRIVILEGE FORMAT A10
 COL OBJECT_TYPE FORMAT A16
-SELECT table_name, privilege, 'TABLE' as object_type
-FROM USER_TAB_PRIVS 
-WHERE table_name IN (SELECT table_name FROM USER_TABLES)
+SELECT role, table_name, privilege, 'TABLE' as object_type
+FROM ROLE_TAB_PRIVS 
+WHERE owner = 'HIGASHI' AND table_name IN (SELECT table_name FROM USER_TABLES)
 UNION ALL
-SELECT table_name, privilege, 'SEQUENCE' as object_type
-FROM USER_TAB_PRIVS 
-WHERE table_name IN (SELECT sequence_name FROM USER_SEQUENCES)
+SELECT role, table_name, privilege, 'SEQUENCE' as object_type
+FROM ROLE_TAB_PRIVS 
+WHERE owner = 'HIGASHI' AND table_name IN (SELECT sequence_name FROM USER_SEQUENCES)
+AND ROLE='ROLE'
 ;
-
 
 
 
