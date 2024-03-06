@@ -1,3 +1,31 @@
+--ユーザ(HIGASHI)が所有するすべてのオブジェクトを削除
+BEGIN
+   FOR obj IN (SELECT object_name, object_type FROM all_objects WHERE owner = 'HIGASHI') LOOP
+      BEGIN
+         IF obj.object_type = 'TABLE' THEN
+            EXECUTE IMMEDIATE 'DROP TABLE HIGASHI.' || obj.object_name || ' CASCADE CONSTRAINTS';
+         ELSE
+            EXECUTE IMMEDIATE 'DROP ' || obj.object_type || ' HIGASHI.' || obj.object_name;
+         END IF;
+      EXCEPTION
+         WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('Failed to drop ' || obj.object_type || ' ' || obj.object_name);
+      END;
+   END LOOP;
+END;
+/
+
+--ユーザ(HIGASHI)が所有するすべてのオブジェクトを確認
+SET LINESIZE 100
+SET PAGESIZE 500
+COL object_name FORMAT A36
+COL object_type FORMAT A16
+SELECT object_name, object_type 
+FROM all_objects 
+WHERE owner = 'HIGASHI'
+ORDER BY object_type 
+;
+
 
 -- ロール(ROLE)にユーザ(HIGASHI)が所有するテーブルの権限を付与
 BEGIN
@@ -46,9 +74,6 @@ FROM ROLE_TAB_PRIVS
 WHERE owner = 'HIGASHI' AND table_name IN (SELECT sequence_name FROM USER_SEQUENCES)
 AND ROLE='ROLE'
 ;
-
-
-
 
 -- ユーザのロールと権限を同時に表示
 SET LINESIZE 100
