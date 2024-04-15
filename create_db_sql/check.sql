@@ -1,3 +1,12 @@
+-- REDO Log Information
+
+SELECT
+    GROUP#,
+    TYPE,
+    MEMBER,
+    -- ROUND(BYTES / 1024 / 1024) AS FILE_SIZE_MB
+FROM V$LOGFILE;
+
 --ユーザ(HIGASHI)が所有するすべてのオブジェクトを削除
 BEGIN
    FOR obj IN (SELECT object_name, object_type FROM all_objects WHERE owner = 'HIGASHI') LOOP
