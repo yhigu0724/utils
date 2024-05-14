@@ -1,3 +1,47 @@
+
+List of foreign keys and the tables they reference in Oracle DB
+https://stackoverflow.com/questions/1729996/list-of-foreign-keys-and-the-tables-they-reference-in-oracle-db
+
+
+COL TABLE_NAME FOR A12
+COL COLUMN_NAME FOR A12
+COL CONSTRAINT_NAME FOR A16
+COL OWNER FOR A12
+COL R_OWNER FOR A12
+COL R_TABLE_NAME FOR A12
+COL R_PK FOR A12
+SELECT a.table_name, a.column_name, a.constraint_name, c.owner,
+-- referenced pk
+c.r_owner, c_pk.table_name r_table_name, c_pk.constraint_name r_pk
+FROM all_cons_columns a
+JOIN all_constraints c ON a.owner = c.owner
+      AND a.constraint_name = c.constraint_name
+JOIN all_constraints c_pk ON c.r_owner = c_pk.owner
+      AND c.r_constraint_name = c_pk.constraint_name
+WHERE c.constraint_type = 'R'
+   AND a.table_name = 'EMPLOYEE'
+;
+
+
+How to get primary key column in Oracle?
+https://stackoverflow.com/questions/9016578/how-to-get-primary-key-column-in-oracle
+
+COL TABLE_NAME FOR A12
+COL COLUMN_NAME FOR A12
+COL STATUS FOR A8
+COL OWNER FOR A8
+COL CONSTRAINT_NAME FOR A16
+SELECT cols.table_name, cols.column_name, cols.position, cons.status
+, cons.owner, cols.constraint_name
+FROM all_constraints cons, all_cons_columns cols
+WHERE cols.table_name = 'SECTION'
+AND cons.constraint_type = 'P'
+AND cons.constraint_name = cols.constraint_name
+AND cons.owner = cols.owner
+ORDER BY cols.table_name, cols.position
+;
+
+
 --  Database Component Information
 SQL> 
 SET linesize 200
