@@ -1,0 +1,21 @@
+# ログ用ディレクトリの作成
+mkdir -p /var/log/containerapp
+
+# logrotateの設定（1つのファイルで全てのコンテナログに対応）
+cat > /etc/logrotate.d/containerapp << 'EOF'
+/var/log/containerapp/cc_*.log {
+    daily
+    rotate 7
+    compress
+    missingok
+    notifempty
+    create 640 root root
+    postrotate
+        for pid_file in /var/run/containerapp/cc_*.pid; do
+            if [ -f "$pid_file" ]; then
+                kill -USR1 $(cat "$pid_file")
+            fi
+        done
+    endscript
+}
+EOF
