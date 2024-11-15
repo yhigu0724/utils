@@ -1,0 +1,14 @@
+# /etc/systemd/system/outsystemscc.service
+[Unit]
+Description=OutSystems CC Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/outsystemscc-start.sh
+ExecStop=/usr/bin/pkill -f outsystemscc
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
