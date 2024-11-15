@@ -1,0 +1,13 @@
+# /etc/logrotate.d/outsystemscc
+/var/log/outsystemscc.log {
+    daily
+    rotate 14
+    missingok
+    notifempty
+    compress
+    delaycompress
+    dateext
+    dateformat -%Y%m%d
+    create 0644 root root
+    copytruncate
+}
