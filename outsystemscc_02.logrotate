@@ -1,0 +1,10 @@
+/opt/outsystemsscc/log/outsytemscc.log {
+    daily
+    rotate 400
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 0644 root root
+    extension .1
+}

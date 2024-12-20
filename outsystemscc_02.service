@@ -1,0 +1,16 @@
+# /etc/systemd/system/outsystenscc.service
+[Unit]
+Description=OutSystems CC Service
+After=network.target
+
+[Service]
+ExecStart=/opt/outsystemsscc/bin/outsytemscc
+ExecStop=/bin/kill -TERM $MAINPID
+StandardOutput=append:/opt/outsystemsscc/log/outsytemscc.log
+StandardError=append:/opt/outsystemsscc/log/outsytemscc.log
+Restart=always
+KillMode=mixed
+TimeoutStopSec=10s
+
+[Install]
+WantedBy=multi-user.target
