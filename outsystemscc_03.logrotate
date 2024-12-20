@@ -1,0 +1,15 @@
+/opt/outsystemsscc/log/outsytemscc.log {
+    daily
+    rotate 400
+    missingok
+    notifempty
+    compress
+    delaycompress
+    create 0644 root root
+    extension .1
+    postrotate
+        if [ -f /opt/outsystemsscc/pid/outsytemscc.pid ]; then
+            kill -HUP $(cat /opt/outsystemsscc/pid/outsytemscc.pid) 2>/dev/null || true
+        fi
+    endscript
+}
