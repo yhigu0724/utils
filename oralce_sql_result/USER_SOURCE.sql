@@ -1,5 +1,5 @@
 # RHELのプロンプトで実行
-sqlplus -S NISHI/iku3952@sjisdb << 'EOF'
+sqlplus -S NISHI/xxxxx@sjisdb << 'EOF'
 SET PAGESIZE 0
 SET LINESIZE 32767
 SET FEEDBACK OFF
