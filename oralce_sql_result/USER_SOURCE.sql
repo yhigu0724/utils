@@ -11,7 +11,8 @@ SET LONG 2000000
 -- 全オブジェクトを個別のファイルに出力するスクリプトを生成
 SPOOL run_extract.sql
 SELECT 
-    'SPOOL source_sql/' || OBJECT_NAME || '.sql' || CHR(10) ||
+    -- ファイル名の先頭に TYPE を付けて重複を避ける
+    'SPOOL source_sql/' || OBJECT_TYPE || '_' || OBJECT_NAME || '.sql' || CHR(10) ||
     'SELECT TEXT FROM USER_SOURCE WHERE NAME = ''' || OBJECT_NAME || ''' AND TYPE = ''' || OBJECT_TYPE || ''' ORDER BY LINE;' || CHR(10) ||
     'SELECT ''/'' FROM DUAL;' || CHR(10) ||
     'SPOOL OFF'
