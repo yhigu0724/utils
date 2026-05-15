@@ -24,3 +24,18 @@ SPOOL OFF
 @run_extract.sql
 EXIT
 EOF
+    
+SELECT 
+    OWNER,          -- シノニムの所有者（PUBLICならPUBLICと出ます）
+    SYNONYM_NAME,   -- 表示されている名前
+    TABLE_OWNER,    -- ★本当の所有者（誰が作ったものか）
+    TABLE_NAME      -- ★本当のオブジェクト名
+FROM 
+    ALL_SYNONYMS
+WHERE 
+    TABLE_OWNER != 'あなたのユーザー名'  -- 自分の所有でないものを抽出
+    AND TABLE_NAME IN (
+        SELECT OBJECT_NAME FROM ALL_OBJECTS 
+        WHERE OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION', 'PACKAGE')
+    )
+ORDER BY TABLE_OWNER;
